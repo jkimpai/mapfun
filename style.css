@@ -1,0 +1,21 @@
+body {
+  text-align: center;
+}
+
+button {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 18pt;
+  color: white;
+  width: 160px;
+  height: 60px;
+  background-color: #a1d69c;
+  display: inline-block;
+  margin: 10px;
+  border: none;
+  border-radius: 25px;
+}
+
+button:hover {
+  background-color: #64A275;
+}

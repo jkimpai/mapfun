@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="../style.css">
+<style>
+.states {
+  fill: #c1c1c1;
+  stroke: white; /*#ccf8ff;*/
+  stroke-width: 1px;
+}
+
+.states:hover {
+  fill: #a1d69c;
+}
+
+.counties {
+  fill: #a1d69c;
+  stroke: #ccf8ff;
+  stroke-width: 0.5px;
+}
+
+.counties:hover {
+  fill: #64A275;
+}
+
+#btn-cty {
+  height: 35px;
+  border-radius: 45px;
+  font-size: 12pt;
+}
+
+svg {
+  background-color: none; /*#ccf8ff;*/
+  border: none; /*solid #64A275 1px;*/
+  padding: 20px;
+  border-radius: 100px;
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700" rel="stylesheet">
+<body>
+<div>
+<button onclick="window.location.href='../index.html'">Back</button>
+</div>
+<svg width="960" height="600"></svg>
+<div>
+  <button id="btn-cty">Toggle Counties</button>
+</div>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+var colorMap = d3.scaleLinear()
+  .domain([0,1])
+  .range(["white", "blue"])
+  .interpolate(d3.interpolateRgb);
+
+var svg = d3.select("svg");
+var path = d3.geoPath(); 
+
+// county toggle variable
+var counties = 0;
+
+
+// county toggle button
+document.getElementById("btn-cty").onclick = function() {
+  d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
+    if (error) throw error;
+    
+    if(counties) {
+      d3.selectAll(".counties").remove();
+    } else {
+      svg.selectAll("path")
+        .data(topojson.feature(us, us.objects.counties).features)
+      .enter().append("path")
+        .attr("d", path)
+        .attr("class", "counties");
+    }
+
+    counties = !counties;
+  });
+};
+
+// mapping states
+d3.json("https://d3js.org/us-10m.v1.json", function(error, us) {
+  if (error) throw error;
+  
+  svg.append("g")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.states).features)
+    .enter().append("path")
+      .attr("d", path)
+      .attr("class", "states")
+      .attr("text", function(d){return d.id});
+
+});
+
+</script>
